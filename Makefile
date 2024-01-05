@@ -20,7 +20,7 @@ SRCS =  main/minishell.c main/signals.c\
 		builtins/builtins_2.c builtins/do_cd.c builtins/do_exit.c\
 		executor/executor.c\
 		executor/utils_executor.c\
-		executor/pipes.c
+		executor/utils_execve.c \
 		
 INCLUDES = includes
 

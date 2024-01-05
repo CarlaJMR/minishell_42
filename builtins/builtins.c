@@ -6,32 +6,79 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 13:05:26 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/02 14:54:08 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 19:16:26 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	choose_builtin(t_data *data, t_cmd *cmd, int *pids)
+int	is_builtin(t_cmd *cmd)
 {
-	if (data->cmds->comand[0] && data->cmds->fd_in != -1)
+	if (!ft_strncmp(cmd->comand[0], "env", 4))
+		return (1);
+	else if (!ft_strncmp(cmd->comand[0], "pwd", 4))
+		return (1);
+	else if (!ft_strncmp(cmd->comand[0], "echo", 5))
+		return (1);
+	else if (!ft_strncmp(cmd->comand[0], "export", 7))
+		return (1);
+	else if (!ft_strncmp(cmd->comand[0], "unset", 6))
+		return (1);
+	else if (!ft_strncmp(cmd->comand[0], "cd", 3))
+		return (1);
+	else if (!ft_strncmp(cmd->comand[0], "exit", 5))
+		return (1);
+	return (0);
+}
+
+void prep_builtin(t_cmd *cmd, int is_parent)
+{
+	if (is_parent)
+		return ;
+	cmd->fd_in = 0;
+	cmd->fd_in = 1;
+	
+}
+
+void	choose_builtin(t_data *data, t_cmd *cmd, int flag, int is_parent)
+{
+	int	builtin;
+
+	if (!cmd->comand[0])
+		return ;
+	builtin = is_builtin(cmd);
+	if (builtin)
+		prep_builtin(cmd, is_parent);
+	if (!ft_strncmp(cmd->comand[0], "env", 4))
+		print_env(&data->env, cmd);
+	else if (!ft_strncmp(cmd->comand[0], "pwd", 4))
+		do_pwd(&data->env, cmd);
+	else if (!ft_strncmp(cmd->comand[0], "echo", 5))
+		do_echo(cmd);
+	else if (!ft_strncmp(cmd->comand[0], "export", 7))
+		do_export(data->env, cmd, data);
+	else if (!ft_strncmp(cmd->comand[0], "unset", 6))
+		do_unset(cmd, &data->env);
+	else if (!ft_strncmp(cmd->comand[0], "cd", 3))
+		do_cd(data->env, cmd);
+	else if (!ft_strncmp(cmd->comand[0], "exit", 5))
+		do_exit(cmd);
+	else
+		do_execve(data, cmd, flag);
+	if (!builtin)
+		return ;
+	if (!is_parent)
 	{
-		if (!ft_strncmp(cmd->comand[0], "env", 4))
-			print_env(&data->env, cmd);
-		else if (!ft_strncmp(cmd->comand[0], "pwd", 4))
-			do_pwd(&data->env, cmd);
-		else if (!ft_strncmp(cmd->comand[0], "echo", 5))
-			do_echo(cmd);
-		else if (!ft_strncmp(cmd->comand[0], "export", 7))
-			do_export(data->env, cmd, data);
-		else if (!ft_strncmp(cmd->comand[0], "unset", 6))
-			do_unset(cmd, &data->env);
-		else if (!ft_strncmp(cmd->comand[0], "cd", 3))
-			do_cd(data->env, cmd);
-		else if (!ft_strncmp(cmd->comand[0], "exit", 5))
-			do_exit(cmd);
-		else
-			do_execve(data, cmd, data->flag_exec, pids);
+		close(0);
+		close(1);
+		exit(set_exit_code(0, 0));
+	}
+	else
+	{
+		if (cmd->fd_in > 2)
+            close(cmd->fd_in);
+        if (cmd->fd_out > 2)
+            close(cmd->fd_out);
 	}
 }
 

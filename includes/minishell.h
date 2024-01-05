@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:12:25 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/05 11:33:42 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 19:12:19 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ typedef struct s_cmd
 {
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
+	int				pid;
 	char			**comand;
 	int				redir[2];
+	int				pip_fd[2];
 	int				fd_in;
 	int				fd_out;
 	int 			n_cmds;
@@ -143,7 +145,8 @@ void		free_comand(t_cmd **lst);
 char		*get_next_line(int fd);
 
 //builtins - builtins.c
-void		choose_builtin(t_data *data, t_cmd *cmd, int *pids);
+int			is_builtin(t_cmd *cmd);
+void		choose_builtin(t_data *data, t_cmd *cmd, int flag, int is_parent);
 void		do_echo(t_cmd *cmd);
 void		print_env(t_env **stack, t_cmd *cmd);
 void		do_pwd(t_env **stack, t_cmd *cmd);
@@ -180,21 +183,20 @@ void		unset_utils(char *s, t_env **head);
 void		print_cd_error(char *s);
 
 //executor - executor.c
-void		executor(t_data sh);
-void		do_execve(t_data *data, t_cmd *cmd, int flag, int *pids);
-char		**env_to_matrix(t_env *env);
+void    	executor(t_data sh);
+void    	create_pipe(t_data sh, t_cmd *cmd, int i);
+pid_t    	process_child(t_data sh, t_cmd *cmd);
+void    	child(t_data sh, t_cmd *cmd);
 
 //executor - utils_executor.c
+void    	error(char *s);
+void    	ft_wait(t_data sh);
+
+
+//executor - utils_execve.c
 char		*to_path(char *cmd, char **envp);
 char		*path_to_cmd(char *cmd, char **path);
-void		execute_cmd(char **cmd, char **envp, int *pids);
-
-//executor - pipes.c
-void    	pipe_process(t_cmd *cmd, t_data data);
-int     	child_process(t_data data, t_cmd *cmd, int *pids);
-void    	error(char *s);
-void    	last_process(t_cmd *cmd, t_data data, int *pids);
-void    	do_child(t_data data, t_cmd *cmd, int *pids, int *pipefd);
-void    	wait_all(t_cmd *cmd, int *pids);
-
+void		execute_cmd(char **cmd, char **envp);
+void    	do_execve(t_data *data, t_cmd *cmd, int flag);
+char    	**env_to_matrix(t_env *env);
 #endif

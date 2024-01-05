@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 10:55:55 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/05 11:14:23 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 19:12:30 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,81 +17,98 @@ void    executor(t_data sh)
 	sh.cmds->n_cmds = number_comands(sh.cmds);
 	sh.cmds->fd_in = sh.cmds->redir[0];
 	sh.cmds->fd_out = sh.cmds->redir[1];
-	if(sh.flag_pipe == 0)
-	{
-		sh.flag_exec = 0;
-		choose_builtin(&sh, sh.cmds, 0);
-	}
+	if(sh.flag_pipe == 0 && is_builtin(sh.cmds))
+		choose_builtin(&sh, sh.cmds, 0, 1);
 	else
 	{
-		sh.flag_exec = 1;
-		sh.store_std[0] = dup(STDIN_FILENO);
-		sh.store_std[1] = dup(STDOUT_FILENO);
-		dup2(sh.cmds->fd_in, STDIN_FILENO);
-		pipe_process(sh.cmds, sh);
-		dup2(sh.store_std[0], STDIN_FILENO);
-		dup2(sh.store_std[1], STDOUT_FILENO);
-		close(sh.store_std[0]);
-		close(sh.store_std[1]);
+		create_pipe(sh, sh.cmds, -1);
 	}
 }
 
-void    do_execve(t_data *data, t_cmd *cmd, int flag, int *pids)
+void    create_pipe(t_data sh, t_cmd *cmd, int i)
 {
-	pid_t   child;
-	char 	** our_env;
-
-	our_env = env_to_matrix(data->env);
-	
-	if(flag)
-	{
-		execute_cmd(cmd->comand, our_env, pids);
-		exit(EXIT_FAILURE);
-	}
-	else 
-	{
-		child = fork();
-		if(child < 0)
-			perror("error: fork");
-		if(child == 0)
-		{
-			//signal(SIGQUIT, handle_quit);
-			//signal(SIGINT, signal_handler);
-			dup2(cmd->fd_in, STDIN_FILENO);
-			dup2(cmd->fd_out, STDOUT_FILENO);
-			execute_cmd(cmd->comand, our_env, NULL);
-			exit(EXIT_FAILURE);
-		}
-		set_signals();
-		signal(SIGINT, SIG_IGN);
-		//signal(SIGQUIT, SIG_IGN);
-		waitpid(child, NULL, 0);
-		free_split(our_env);
-	}
+    t_cmd   *tmp;
+    tmp = cmd;
+    
+    while(++i < cmd->n_cmds && tmp)
+    {
+        tmp->pid = -1;
+        if(pipe(tmp->pip_fd) == 1)
+            error("error:");
+        tmp->pid = process_child(sh, tmp);
+        tmp = tmp->next;
+    }
+	// pids[i] = fork();
+    // if(pids[i] < 0)
+    //     error("error: fork");
+    //if(!pids[i])
+        //last_process(tmp, sh);
+    // else
+    // {
+    // }
+    ft_wait(sh);
 }
 
-char    **env_to_matrix(t_env *env)
+// void    last_process(t_cmd *cmd, t_data data)
+// {
+//     cmd->fd_in = cmd->redir[0];
+//     cmd->fd_out = cmd->redir[1];
+//     if(cmd->fd_out > 2)
+//         dup2(cmd->fd_out, STDOUT_FILENO);
+//     if(cmd->fd_in > 2)
+//         dup2(cmd->fd_in, STDIN_FILENO);
+//     //close(data.store_std[0]);
+//     //close(data.store_std[1]);
+//     choose_builtin(&data, cmd, 1);
+
+// }
+
+pid_t    process_child(t_data sh, t_cmd *cmd)
 {
-	char    **matriz;
-	t_env   *tmp;
-	int         i;
-	char    *name;
-	char    *content;
-
-	tmp = env;
-	matriz = (char **)malloc((ev_lstsize(env) + 1) * sizeof(char *));
-	i = 0;
-
-	while(tmp)
-	{
-		name = ft_strjoin(tmp->name, "=");
-		content = ft_strjoin(name, tmp->content);
-		free(name);
-		matriz[i] = ft_strdup(content);
-		free(content);
-		i++;
-		tmp = tmp->next;
-	}
-	matriz[i] = NULL;
-	return(matriz);
+    pid_t   pid;
+    
+    if (cmd->next)
+        cmd->fd_out = cmd->pip_fd[1];
+    if (cmd->prev)
+        cmd->fd_in = cmd->prev->pip_fd[0];
+    if (cmd->redir[0] > 2)
+        cmd->fd_in = cmd->redir[0];
+    if (cmd->redir[1] > 2)
+        cmd->fd_out = cmd->redir[1];
+    pid = fork();
+    if(pid < 0)
+        error("Error: ");
+    if(pid == 0)
+        child(sh, cmd);
+    else
+    {
+        if (cmd->redir[0] > 2)
+            close(cmd->redir[0]);
+        if (cmd->redir[1] > 2)
+            close(cmd->redir[1]);
+        close(cmd->pip_fd[1]);
+        if (!cmd->next)
+            close(cmd->pip_fd[0]);
+        if (cmd->prev)
+            close(cmd->prev->pip_fd[0]);
+    }
+    return (pid);
 }
+
+void    child(t_data sh, t_cmd *cmd)
+{
+    if(cmd->fd_in != 0)
+        dup2(cmd->fd_in, STDIN_FILENO);
+    if (cmd->fd_out != 1)
+        dup2(cmd->fd_out, STDOUT_FILENO);
+    close(cmd->pip_fd[0]);
+    close(cmd->pip_fd[1]);
+    if (cmd->prev)
+        close(cmd->prev->pip_fd[0]);
+    if (cmd->redir[0] > 2)
+        close(cmd->redir[0]);
+    if (cmd->redir[1] > 2)
+        close(cmd->redir[1]);
+    choose_builtin(&sh, cmd, 1, 0);
+}
+

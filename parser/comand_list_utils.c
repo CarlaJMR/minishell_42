@@ -6,7 +6,7 @@
 /*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2023/12/29 11:06:20 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 13:45:07 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@ t_cmd	*new_comand(void)
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
+	cmd->pid = -1;
 	cmd->redir[0] = 0;
 	cmd->redir[1] = 1;
 	cmd->fd_in = STDIN_FILENO;
 	cmd->fd_out = STDOUT_FILENO;
+	cmd->pip_fd[0] = -1;
+	cmd->pip_fd[1] = -1;
 	cmd->next = NULL;
 	cmd->prev = NULL;
 	return (cmd);
