@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/02 13:38:08 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 11:18:29 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,32 @@ void	signal_handler(int sig)
 
 void	signals_here_doc(int sign)
 {
-	if (sign == SIGQUIT)
-		SIG_IGN ;
-	else if (sign == SIGINT)
-	{
-		write(1, "\n", 1);
-		exit(set_exit_code(130, 1));
-	}
+	(void)sign;
+	write(1, "^C\n", 3);
+	exit(set_exit_code(130, 1));
 }
 
 void	set_signals(void)
 {
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	handle_quit(int sign)
+{
+	//pid_t	pid;
+	//int		status;
+
+	(void)sign;
+	/*pid = waitpid(-1, &status, 0);
+	if (pid == -1)
+		SIG_IGN ;
+	else*/
+	{
+		ft_putendl_fd("Quit (core dumped)\n", 1);
+		signal(SIGQUIT, SIG_DFL);
+		exit(set_exit_code(131, 1));
+	}
 }
 
 int	set_exit_code(int i, int flag)

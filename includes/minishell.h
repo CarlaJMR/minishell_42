@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:12:25 by cjoao-me          #+#    #+#             */
-/*   Updated: 2023/12/30 19:23:30 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/05 11:33:42 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <unistd.h>
+# include <termios.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -71,6 +72,7 @@ int			handle_input(char *l);
 void		set_signals(void);
 void		signal_handler(int sig);
 void		signals_here_doc(int sig);
+void		handle_quit(int sign);
 int			set_exit_code(int i, int flag);
 
 //parser - syntax.c

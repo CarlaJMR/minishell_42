@@ -6,11 +6,29 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/02 14:33:55 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 12:03:22 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	change_echo_on(void)
+{
+	struct termios	t;
+
+	tcgetattr(0, &t);
+	t.c_lflag |= ECHOCTL;
+	tcsetattr(0, 0, &t);
+}
+
+void	change_echo_off(void)
+{
+	struct termios	t;
+
+	tcgetattr(0, &t);
+	t.c_lflag &= ~ECHOCTL;
+	tcsetattr(0, 0, &t);
+}
 
 char	*expander_heredoc(char *str, t_data sh)
 {
@@ -44,7 +62,8 @@ char	*expander_heredoc(char *str, t_data sh)
 void	ft_hd_child(char *limiter, int fd, t_data sh)
 {
 	char	*line;
-	
+
+	change_echo_off();
 	signal(SIGINT, signals_here_doc);
 	while (1)
 	{
@@ -64,6 +83,7 @@ void	ft_hd_child(char *limiter, int fd, t_data sh)
 		free(line);
 	}
 	close(fd);
+	change_echo_on();
 	exit(0);
 }
 
@@ -85,6 +105,7 @@ int	ft_here_doc(char *limiter, t_data sh)
 		ft_hd_child(limiter, file, sh);
 	signal(SIGINT, SIG_IGN);
 	waitpid(0, &status, 0);
+	change_echo_on();
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 	{
 		set_exit_code(WEXITSTATUS(status), 1);

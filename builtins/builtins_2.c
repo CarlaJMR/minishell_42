@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:06:56 by mneves-l          #+#    #+#             */
-/*   Updated: 2023/12/30 17:40:42 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/05 12:08:28 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,19 @@ void	do_unset(t_cmd *cmd, t_env **env)
 
 void	check_name(char *n)
 {
-	int i;
-	i = 0;
+	int	i;
 
-	while(n[i])
+	i = 0;
+	while (n[i])
 	{
-		if((n[i] > 32 && n[i] < 48) || (n[i] > 57 && n[i] < 65) || (n[i] > 90  && n[i] < 97) || (n[i] > 122 && n[i] < 127))
+		if ((n[i] > 32 && n[i] < 48) || (n[i] > 57 && n[i] < 65) \
+			|| (n[i] > 90 && n[i] < 97) || (n[i] > 122 && n[i] < 127))
 			error_export(n);
 		i++;
 	}
 }
 
-void 	error_export(char *name)
+void	error_export(char *name)
 {
 	ft_putstr_fd("export: '", 2);
 	ft_putstr_fd(name, 2);

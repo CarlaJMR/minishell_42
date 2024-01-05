@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/02 14:25:59 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 12:01:48 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void	manage_outfile(int option, char **line, int *i, t_cmd *cm)
 void	manage_redirections(char **line, int *i, t_cmd *cm, t_data sh)
 {
 	int	option;
-	int hd;
-	
+	int	hd;
+
 	option = redir_type(line[*i]);
 	if (option == 4)
 		hd = ft_here_doc(line[(*i) + 1], sh);

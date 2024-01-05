@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 13:46:26 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/02 14:48:48 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 11:54:27 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void    pipe_process(t_cmd *cmd, t_data data)
 
     tmp = cmd;
     pids = ft_calloc(cmd->n_cmds, sizeof(int));
+    signal(SIGQUIT, handle_quit);
     while(tmp && i++ < cmd->n_cmds - 1)
     {
         pids[j++] = child_process(data, tmp, pids);
@@ -45,24 +46,30 @@ void    pipe_process(t_cmd *cmd, t_data data)
 
 void    wait_all(t_cmd *cmd, int *pids)
 {
+    int status;
     int j;
+    
     j = 0;
     while (cmd->prev)
         cmd = cmd->prev;
     while(j< cmd->n_cmds)
     {
         if(pids[j])
-            waitpid(pids[j], NULL, 0);
+            waitpid(pids[j], &status, 0);
         j++;
     }
+	if (WIFSIGNALED(status))
+        set_exit_code(128 + WTERMSIG(status), 1);
+    else if (WIFEXITED(status))
+	    set_exit_code(WEXITSTATUS(status), 1);
 }
 
 void    last_process(t_cmd *cmd, t_data data, int *pids)
 {
     if(cmd->fd_out > 2)
         dup2(cmd->fd_out, STDOUT_FILENO);
-    close(data.store_std[0]);
-    close(data.store_std[1]);
+    //close(data.store_std[0]);
+    //close(data.store_std[1]);
     choose_builtin(&data, cmd, pids);
 
 }

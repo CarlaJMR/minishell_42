@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 10:55:55 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/02 14:49:04 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/05 11:14:23 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void    do_execve(t_data *data, t_cmd *cmd, int flag, int *pids)
 	char 	** our_env;
 
 	our_env = env_to_matrix(data->env);
+	
 	if(flag)
 	{
 		execute_cmd(cmd->comand, our_env, pids);
@@ -54,11 +55,16 @@ void    do_execve(t_data *data, t_cmd *cmd, int flag, int *pids)
 			perror("error: fork");
 		if(child == 0)
 		{
+			//signal(SIGQUIT, handle_quit);
+			//signal(SIGINT, signal_handler);
 			dup2(cmd->fd_in, STDIN_FILENO);
 			dup2(cmd->fd_out, STDOUT_FILENO);
 			execute_cmd(cmd->comand, our_env, NULL);
 			exit(EXIT_FAILURE);
 		}
+		set_signals();
+		signal(SIGINT, SIG_IGN);
+		//signal(SIGQUIT, SIG_IGN);
 		waitpid(child, NULL, 0);
 		free_split(our_env);
 	}

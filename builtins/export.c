@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 11:50:42 by mneves-l          #+#    #+#             */
-/*   Updated: 2023/12/30 17:45:43 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/05 12:09:23 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	set_variable(t_env *env, char *cmd)
 {
 	int		size;
 	int		len;
-	char 	*name;
+	char	*name;
 
 	if (ft_strchr(cmd, '=') == NULL)
 	{
@@ -65,10 +65,10 @@ void	set_variable(t_env *env, char *cmd)
 		check_name(name);
 		free(name);
 		len = ft_strlen(cmd);
-		ev_lstadd_back(&env, ev_lstnew(ft_substr(cmd, 0, size), ft_substr(cmd, size + 1, len - size)));
+		ev_lstadd_back(&env, ev_lstnew(ft_substr(cmd, 0, size), \
+			ft_substr(cmd, size + 1, len - size)));
 	}
 }
-
 
 /*void	print_export(t_env *env, t_data *data, t_cmd *cmd)
 {
@@ -122,8 +122,6 @@ void	bubble_sort(t_env *env)
 		i++;
 	}
 }*/
-
-
 
 void	print_export(t_env *env, t_data *data, t_cmd *cmd)
 {
