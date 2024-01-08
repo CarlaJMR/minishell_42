@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 11:03:47 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/05 19:06:58 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:11:25 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	execute_cmd(char **cmd, char **envp)
 	}
 	if(flag == 1)
 		path = to_path(cmd[0], envp);
-	if (execve(path, cmd, envp) == -1 || flag == 0)
+	if (execve(path, cmd, NULL) == -1 || flag == 0)
 	{
 		ft_putstr_fd(cmd[0], 2);
 		ft_putendl_fd(" :command not found", 2);

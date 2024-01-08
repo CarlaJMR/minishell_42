@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/05 12:01:48 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:02:57 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ void	manage_outfile(int option, char **line, int *i, t_cmd *cm)
 				O_WRONLY | O_TRUNC | O_CREAT, 0644);
 }
 
-void	manage_redirections(char **line, int *i, t_cmd *cm, t_data sh)
+void	manage_infile(t_cmd *cm, char **line, int *i, t_data sh)
 {
-	int	option;
 	int	hd;
+	int	option;
 
 	option = redir_type(line[*i]);
 	if (option == 4)
@@ -67,11 +67,26 @@ void	manage_redirections(char **line, int *i, t_cmd *cm, t_data sh)
 		if (option == 3)
 			cm->redir[0] = open(line[(*i) + 1], O_RDONLY, 0644);
 		else if (option == 4)
+		{
 			cm->redir[0] = hd;
+			if (hd == -1)
+				cm->hd_error = 1;
+		}
 		if (cm->redir[0] < 0 && option == 3)
 			infile_error(line, i);
 	}
-	if (cm->redir[1] != -1)
-		manage_outfile(option, line, i, cm);
+}
+
+void	manage_redirections(char **line, int *i, t_cmd *cm, t_data sh)
+{
+	int	option;
+
+	option = redir_type(line[*i]);
+	if (!cm->hd_error)
+	{
+		manage_infile(cm, line, i, sh);
+		if (cm->redir[0] != -1)
+			manage_outfile(option, line, i, cm);
+	}
 	(*i)++;
 }

@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/05 11:18:29 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:03:42 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,28 +37,22 @@ void	set_signals(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	handle_quit(int sign)
+void	child_signal_handler(int signal)
 {
-	//pid_t	pid;
-	//int		status;
-
-	(void)sign;
-	/*pid = waitpid(-1, &status, 0);
-	if (pid == -1)
-		SIG_IGN ;
-	else*/
+	if (signal == SIGINT)
 	{
-		ft_putendl_fd("Quit (core dumped)\n", 1);
-		signal(SIGQUIT, SIG_DFL);
-		exit(set_exit_code(131, 1));
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
 	}
+	if (signal == SIGQUIT)
+		printf("Quit (core dumped)\n");
+	return ;
 }
 
-int	set_exit_code(int i, int flag)
+void	child_signal(void)
 {
-	static int	code;
-
-	if (flag)
-		code = i;
-	return (code);
+	signal(SIGINT, child_signal_handler);
+	signal(SIGQUIT, child_signal_handler);
+	return ;
 }

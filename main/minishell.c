@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2023/12/29 12:59:16 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/08 15:31:47 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,15 @@ void	print_cmd_list(t_cmd *c)
 		printf("next %p\n", c->next);
 		temp = temp->next;
 	}
+}
+
+int	set_exit_code(int i, int flag)
+{
+	static int	code;
+
+	if (flag)
+		code = i;
+	return (code);
 }
 
 void	init_data(t_data *sh, char **env)

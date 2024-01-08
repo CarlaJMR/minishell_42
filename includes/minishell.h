@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:12:25 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/05 19:12:19 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:06:09 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_cmd
 	int				pip_fd[2];
 	int				fd_in;
 	int				fd_out;
+	int				hd_error;
 	int 			n_cmds;
 }					t_cmd;
 
@@ -66,16 +67,18 @@ typedef struct s_data
 }					t_data;
 
 //main - minishell.c
-void		print_cmd_list(t_cmd *c);
 void		init_data(t_data *sh, char **env);
 int			handle_input(char *l);
+int			set_exit_code(int i, int flag);
+void		parse_comands(char *line, t_data sh);
 
 //main - signals.c
 void		set_signals(void);
 void		signal_handler(int sig);
 void		signals_here_doc(int sig);
-void		handle_quit(int sign);
-int			set_exit_code(int i, int flag);
+void		child_signal(void);
+void		child_signal_handler(int signal);
+
 
 //parser - syntax.c
 int			check_syntax(char *line, int i);
@@ -92,6 +95,9 @@ int			check_mixed_redir(char *line, char c, int *i);
 
 //parser - redirections.c
 void		manage_redirections(char **line, int *i, t_cmd *cm, t_data sh);
+void		manage_infile(t_cmd *cm, char **line, int *i, t_data sh);
+void		manage_outfile(int option, char **line, int *i, t_cmd *cm);
+void		infile_error(char **line, int *i);
 int			redir_type(char *str);
 
 //parser - heredoc.c

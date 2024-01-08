@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 10:55:55 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/05 19:12:30 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 15:20:49 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void    executor(t_data sh)
 	sh.cmds->n_cmds = number_comands(sh.cmds);
 	sh.cmds->fd_in = sh.cmds->redir[0];
 	sh.cmds->fd_out = sh.cmds->redir[1];
-	if(sh.flag_pipe == 0 && is_builtin(sh.cmds))
+	if(sh.flag_pipe == 0 && is_builtin(sh.cmds) && sh.cmds->redir[0] != -1)
 		choose_builtin(&sh, sh.cmds, 0, 1);
-	else
+	else if (sh.cmds->redir[0] != -1)
 	{
 		create_pipe(sh, sh.cmds, -1);
 	}
@@ -67,6 +67,7 @@ pid_t    process_child(t_data sh, t_cmd *cmd)
 {
     pid_t   pid;
     
+    child_signal();
     if (cmd->next)
         cmd->fd_out = cmd->pip_fd[1];
     if (cmd->prev)

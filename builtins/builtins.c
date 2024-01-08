@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 13:05:26 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/05 19:16:26 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:09:09 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	is_builtin(t_cmd *cmd)
 {
+	if (!cmd->comand[0])
+		return (0);
 	if (!ft_strncmp(cmd->comand[0], "env", 4))
 		return (1);
 	else if (!ft_strncmp(cmd->comand[0], "pwd", 4))

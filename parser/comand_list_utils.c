@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   comand_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/05 13:45:07 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/08 15:39:10 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_cmd	*new_comand(void)
 	cmd->fd_out = STDOUT_FILENO;
 	cmd->pip_fd[0] = -1;
 	cmd->pip_fd[1] = -1;
+	cmd->hd_error = 0;
 	cmd->next = NULL;
 	cmd->prev = NULL;
 	return (cmd);
