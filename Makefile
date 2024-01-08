@@ -16,7 +16,7 @@ SRCS =  main/minishell.c main/signals.c\
 		parser/expander.c parser/expander_utils.c \
 		parser/parse.c parser/redirection.c parser/quote_utils.c \
 		parser/comand_list_utils.c parser/heredoc.c \
-		builtins/builtins.c builtins/export.c builtins/utils.c\
+		builtins/builtins.c builtins/do_export.c builtins/utils.c builtins/utils_2.c\
 		builtins/builtins_2.c builtins/do_cd.c builtins/do_exit.c\
 		executor/executor.c\
 		executor/utils_executor.c\

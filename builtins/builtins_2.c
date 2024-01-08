@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:06:56 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/05 12:08:28 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:23:43 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,77 @@ void	do_unset(t_cmd *cmd, t_env **env)
 	set_exit_code(0, 1);
 }
 
-void	check_name(char *n)
+void	do_echo(t_cmd *cmd)
+{
+	int	flag;
+	int	j;
+
+	j = 0;
+	flag = 0;
+	if (cmd->comand[1] && cmd->comand[1][0] && cmd->comand[1][0] == '-')
+	{
+		while (cmd->comand[1][++j] && cmd->comand[1][j] == 'n')
+			flag = 1;
+		if (cmd->comand[1][j] != 'n' && cmd->comand[1][j])
+			flag = 0;
+	}
+	echo_util(cmd, flag);
+	set_exit_code(0, 1);
+}
+
+void	print_env(t_env **stack, t_cmd *cmd)
+{
+	t_env	*tmp;
+
+	tmp = *stack;
+	while (tmp)
+	{
+		if (tmp->content)
+		{
+			ft_putstr_fd(tmp->name, cmd->fd_out);
+			ft_putstr_fd("=", cmd->fd_out);
+			ft_putendl_fd(tmp->content, cmd->fd_out);
+		}
+		tmp = tmp->next;
+	}
+	set_exit_code(0, 1);
+}
+
+void	do_pwd(t_env **stack, t_cmd *cmd)
+{
+	t_env	*tmp;
+
+	tmp = *stack;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->name, "PWD", 4))
+			ft_putendl_fd(tmp->content, cmd->fd_out);
+		tmp = tmp->next;
+	}
+	set_exit_code(0, 1);
+}
+
+void	do_export(t_env *env, t_cmd *cmd, t_data *data)
 {
 	int	i;
 
-	i = 0;
-	while (n[i])
+	i = 1;
+	if (!cmd->comand[1])
+		print_export(env, data, cmd);
+	else
 	{
-		if ((n[i] > 32 && n[i] < 48) || (n[i] > 57 && n[i] < 65) \
-			|| (n[i] > 90 && n[i] < 97) || (n[i] > 122 && n[i] < 127))
-			error_export(n);
-		i++;
+		while (cmd->comand[i])
+		{
+			if (ft_isalpha(cmd->comand[i][0]) || cmd->comand[i][0] == '_')
+			{
+				if (check_repeat(cmd->comand[i], env))
+					set_variable(env, cmd->comand[i]);
+				else
+					check_var(cmd->comand[i], env);
+			}
+			else
+				error_export(cmd->comand[i]);
+			i++;
+		}
 	}
-}
-
-void	error_export(char *name)
-{
-	ft_putstr_fd("export: '", 2);
-	ft_putstr_fd(name, 2);
-	ft_putendl_fd("': not a valid identifier", 2);
-	set_exit_code(1, 1);
-	return ;
 }

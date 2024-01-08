@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 17:33:05 by mneves-l          #+#    #+#             */
-/*   Updated: 2023/12/29 11:24:15 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:04:04 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ void	unset_utils(char *s, t_env **head)
 	if (tmp && !ft_strcmp(tmp->name, s))
 	{
 		*head = tmp->next;
-		free(tmp->name);
-		free(tmp->content);
-		free(tmp);
+		help_unset(tmp->name, tmp->content, tmp);
 		return ;
 	}
 	while (tmp)
@@ -74,14 +72,19 @@ void	unset_utils(char *s, t_env **head)
 				prev->next = tmp->next;
 			else
 				prev->next = NULL;
-			free(tmp->name);
-			free(tmp->content);
-			free(tmp);
+			help_unset(tmp->name, tmp->content, tmp);
 			break ;
 		}
 		prev = tmp;
 		tmp = tmp->next;
 	}
+}
+
+void	help_unset(char *name, char *content, t_env *env)
+{
+	free(name);
+	free(content);
+	free(env);
 }
 
 void	print_cd_error(char *s)

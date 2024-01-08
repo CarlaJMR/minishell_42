@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:12:25 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/08 16:06:09 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:39:16 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_cmd
 	int				fd_in;
 	int				fd_out;
 	int				hd_error;
-	int 			n_cmds;
+	int				n_cmds;
 }					t_cmd;
 
 typedef struct s_env
@@ -62,7 +62,7 @@ typedef struct s_data
 	t_env			*env;
 	int				store_std[2];
 	int				flag_pipe;
-	int 			flag_exec;
+	int				flag_exec;
 	int				status;
 }					t_data;
 
@@ -73,12 +73,11 @@ int			set_exit_code(int i, int flag);
 void		parse_comands(char *line, t_data sh);
 
 //main - signals.c
-void		set_signals(void);
 void		signal_handler(int sig);
 void		signals_here_doc(int sig);
-void		child_signal(void);
+void		set_signals(void);
 void		child_signal_handler(int signal);
-
+void		child_signal(void);
 
 //parser - syntax.c
 int			check_syntax(char *line, int i);
@@ -151,8 +150,13 @@ void		free_comand(t_cmd **lst);
 char		*get_next_line(int fd);
 
 //builtins - builtins.c
+void		choose_builtin(t_data *data, t_cmd *cmd, int is_parent);
+void		help_builtin(int is_parent, int fd_in, int fd_out, int builtin);
 int			is_builtin(t_cmd *cmd);
-void		choose_builtin(t_data *data, t_cmd *cmd, int flag, int is_parent);
+void		prep_builtin(t_cmd *cmd, int is_parent);
+
+//builtins - builtins_2.c
+void		do_unset(t_cmd *cmd, t_env **env);
 void		do_echo(t_cmd *cmd);
 void		print_env(t_env **stack, t_cmd *cmd);
 void		do_pwd(t_env **stack, t_cmd *cmd);
@@ -170,39 +174,39 @@ void		do_exit(t_cmd *cmd);
 int			check_exit_arg(char *str);
 int			get_code(char *str);
 
-//builtins - export.c
+//builtins - do_export.c
 void		check_var(char *cmd, t_env *env);
 int			check_repeat(char *cmd, t_env *env);
 void		set_variable(t_env *env, char *cmd);
 void		print_export(t_env *env, t_data *data, t_cmd *cmd);
 void		bubble_sort(t_env *env);
 
-//builtins - builtins_2.c
-void		do_unset(t_cmd *cmd, t_env **env);
-void 		error_export(char *name);
-void		check_name(char *n);
-
 //builtins - utils.c
 void		echo_util(t_cmd *cmd, int flag);
 void		do_swap(t_env *env);
 void		unset_utils(char *s, t_env **head);
+void		help_unset(char *name, char *content, t_env *env);
 void		print_cd_error(char *s);
 
+//builtins - utils_2.c
+void		check_name(char *n);
+void		error_export(char *name);
+
 //executor - executor.c
-void    	executor(t_data sh);
-void    	create_pipe(t_data sh, t_cmd *cmd, int i);
-pid_t    	process_child(t_data sh, t_cmd *cmd);
-void    	child(t_data sh, t_cmd *cmd);
+void		executor(t_data sh);
+void		create_pipe(t_data sh, t_cmd *cmd, int i);
+pid_t		process_child(t_data sh, t_cmd *cmd);
+void		help_process_child(t_cmd *cmd);
+void		child(t_data sh, t_cmd *cmd);
 
 //executor - utils_executor.c
-void    	error(char *s);
-void    	ft_wait(t_data sh);
-
+void		error(char *s);
+void		do_execve(t_data *data, t_cmd *cmd);
+void		ft_wait(t_data sh);
 
 //executor - utils_execve.c
 char		*to_path(char *cmd, char **envp);
 char		*path_to_cmd(char *cmd, char **path);
 void		execute_cmd(char **cmd, char **envp);
-void    	do_execve(t_data *data, t_cmd *cmd, int flag);
-char    	**env_to_matrix(t_env *env);
+char		**env_to_matrix(t_env *env);
 #endif

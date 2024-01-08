@@ -3,36 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/08 15:31:47 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:35:45 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	print_cmd_list(t_cmd *c)
-{
-	int		size;
-	int		i;
-	t_cmd	*temp;
-
-	temp = c;
-	while (temp)
-	{
-		i = 0;
-		size = 0;
-		printf("%d\n", c->redir[0]);
-		printf("%d\n", c->redir[1]);
-		while (temp->comand[size])
-			size++;
-		while (i < size)
-			printf("%s$\n", temp->comand[i++]);
-		printf("next %p\n", c->next);
-		temp = temp->next;
-	}
-}
 
 int	set_exit_code(int i, int flag)
 {
@@ -77,7 +55,6 @@ void	parse_comands(char *line, t_data sh)
 		free_split(first_split);
 		if (number_comands(sh.cmds) > 1)
 			sh.flag_pipe = 1;
-		//print_cmd_list(sh.cmds);
 		executor(sh);
 		free_comand(&sh.cmds);
 		sh.flag_pipe = 0;
@@ -107,5 +84,6 @@ int	main(int ac, char **av, char **env)
 			free(line);
 	}
 	free_env(&sh.env);
+	unlink("heredoc");
 	return (set_exit_code(0, 0));
 }

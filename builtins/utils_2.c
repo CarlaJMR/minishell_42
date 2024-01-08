@@ -1,54 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_utils.c                                       :+:      :+:    :+:   */
+/*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 13:55:55 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/08 17:36:11 by mneves-l         ###   ########.fr       */
+/*   Created: 2024/01/08 17:08:28 by mneves-l          #+#    #+#             */
+/*   Updated: 2024/01/08 17:23:55 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_comand(t_cmd **lst)
+void	check_name(char *n)
 {
-	t_cmd	*aux;
-
-	while (lst && *lst)
-	{
-		aux = (*lst)->next;
-		free_split((*lst)->comand);
-		free (*lst);
-		*lst = aux;
-	}
-}
-
-void	free_split(char **str)
-{
-	int	size;
 	int	i;
 
 	i = 0;
-	size = 0;
-	while (str[size])
-		size++;
-	while (i < size)
-		free(str[i++]);
-	free(str);
+	while (n[i])
+	{
+		if ((n[i] > 32 && n[i] < 48) || (n[i] > 57 && n[i] < 65) \
+			|| (n[i] > 90 && n[i] < 97) || (n[i] > 122 && n[i] < 127))
+			error_export(n);
+		i++;
+	}
 }
 
-void	free_env(t_env **ev)
+void	error_export(char *name)
 {
-	t_env	*aux;
-
-	while (ev && *ev)
-	{
-		aux = (*ev)->next;
-		free((*ev)->name);
-		free((*ev)->content);
-		free (*ev);
-		*ev = aux;
-	}
+	ft_putstr_fd("export: '", 2);
+	ft_putstr_fd(name, 2);
+	ft_putendl_fd("': not a valid identifier", 2);
+	set_exit_code(1, 1);
+	return ;
 }

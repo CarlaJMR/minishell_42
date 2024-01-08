@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_execve.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 11:03:47 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/08 16:11:25 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:34:51 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,74 +56,42 @@ char	*path_to_cmd(char *cmd, char **path)
 void	execute_cmd(char **cmd, char **envp)
 {
 	char	*path;
-	int 	flag;
-	int 	i;
+	int		flag;
+	int		i;
 
 	i = 0;
 	flag = 0;
-	while(envp[i])
+	while (envp[i])
 	{
-		if(!ft_strncmp(envp[i], "PATH=", 5))
+		if (!ft_strncmp(envp[i], "PATH=", 5))
 			flag = 1;
 		i++;
 	}
-	if(flag == 1)
+	if (flag == 1)
 		path = to_path(cmd[0], envp);
-	if (execve(path, cmd, NULL) == -1 || flag == 0)
+	if (execve(path, cmd, envp) == -1 || flag == 0)
 	{
 		ft_putstr_fd(cmd[0], 2);
 		ft_putendl_fd(" :command not found", 2);
-		set_exit_code(127, 1);
+		free_split(envp);
 		free(path);
-		return ;
+		exit (set_exit_code(127, 1));
 	}
 	free(path);
 }
 
-void    do_execve(t_data *data, t_cmd *cmd, int flag)
+char	**env_to_matrix(t_env *env)
 {
-	(void)flag;
-	// pid_t   child;
-	char 	** our_env;
-
-	our_env = env_to_matrix(data->env);
-	
-	execute_cmd(cmd->comand, our_env);
-	// if(flag)
-	// {
-	// 	execute_cmd(cmd->comand, our_env);
-	// 	exit(EXIT_FAILURE);
-	// }
-	// else 
-	// {
-	// 	child = fork();
-	// 	if(child < 0)
-	// 		perror("error: fork");
-	// 	if(child == 0)
-	// 	{
-	// 		dup2(cmd->fd_in, STDIN_FILENO);
-	// 		dup2(cmd->fd_out, STDOUT_FILENO);
-	// 		execute_cmd(cmd->comand, our_env);
-	// 		exit(EXIT_FAILURE);
-	// 	}
-	// 	waitpid(child, NULL, 0);
-	// 	free_split(our_env);
-	// }
-}
-
-char    **env_to_matrix(t_env *env)
-{
-	char    **matriz;
-	t_env   *tmp;
-	int         i;
-	char    *name;
-	char    *content;
+	char	**matriz;
+	t_env	*tmp;
+	int		i;
+	char	*name;
+	char	*content;
 
 	tmp = env;
 	matriz = (char **)malloc((ev_lstsize(env) + 1) * sizeof(char *));
 	i = 0;
-
-	while(tmp)
+	while (tmp)
 	{
 		name = ft_strjoin(tmp->name, "=");
 		content = ft_strjoin(name, tmp->content);
@@ -134,5 +102,5 @@ char    **env_to_matrix(t_env *env)
 		tmp = tmp->next;
 	}
 	matriz[i] = NULL;
-	return(matriz);
+	return (matriz);
 }
