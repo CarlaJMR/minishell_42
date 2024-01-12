@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 11:50:42 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/12 13:04:31 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/12 13:39:57 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	set_variable(t_env *env, char *cmd)
 	}
 }
 
-void	print_export(t_env *env, t_cmd *cmd)
+/*void	print_export(t_env *env, t_cmd *cmd)
 {
 	t_env	*tmp;
 
@@ -102,6 +102,35 @@ void	print_export(t_env *env, t_cmd *cmd)
 			ft_putendl_fd(tmp->name, cmd->fd_out);
 		tmp = tmp->next;
 	}
+}*/
+
+void	print_export(t_env *env, t_cmd *cmd)
+{
+	t_env	*tmp;
+	t_env	*env_copy;
+	char	**matenv;
+
+	env_copy = NULL;
+	matenv = env_to_matrix(env);
+	get_env(matenv, &env_copy);
+	free_split(matenv);
+	tmp = env_copy;
+	bubble_sort(tmp);
+	while (tmp)
+	{
+		ft_putstr_fd("declare -x: ", cmd->fd_out);
+		if (tmp->content)
+		{
+			ft_putstr_fd(tmp->name, cmd->fd_out);
+			ft_putstr_fd("=\"", cmd->fd_out);
+			ft_putstr_fd(tmp->content, cmd->fd_out);
+			ft_putendl_fd("\"", cmd->fd_out);
+		}
+		else
+			ft_putendl_fd(tmp->name, cmd->fd_out);
+		tmp = tmp->next;
+	}
+	free_env(&env_copy);
 }
 
 void	bubble_sort(t_env *env)
