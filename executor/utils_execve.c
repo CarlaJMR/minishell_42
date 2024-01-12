@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_execve.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 11:03:47 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/08 17:34:51 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/12 13:07:35 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,15 @@ char	*path_to_cmd(char *cmd, char **path)
 	return (cmd);
 }
 
-void	execute_cmd(char **cmd, char **envp)
+void	execute_cmd(char **cmd, char **envp, t_data *sh)
 {
 	char	*path;
 	int		flag;
 	int		i;
 
+	(void)sh;
 	i = 0;
+	path = NULL;
 	flag = 0;
 	while (envp[i])
 	{
@@ -69,12 +71,14 @@ void	execute_cmd(char **cmd, char **envp)
 	}
 	if (flag == 1)
 		path = to_path(cmd[0], envp);
-	if (execve(path, cmd, envp) == -1 || flag == 0)
+	if ((path && execve(path, cmd, envp) == -1) || flag == 0)
 	{
 		ft_putstr_fd(cmd[0], 2);
 		ft_putendl_fd(" :command not found", 2);
 		free_split(envp);
-		free(path);
+		//free(path);
+		//free_env(&sh->env);
+		//free_comand(&sh->cmds);
 		exit (set_exit_code(127, 1));
 	}
 	free(path);

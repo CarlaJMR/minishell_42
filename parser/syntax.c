@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2023/12/29 12:45:25 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/12 12:52:50 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,24 @@ int	check_quotes(char *line, int *i)
 	return (1);
 }
 
+int	is_only_spaces(char *l)
+{
+	int	i;
+
+	i = 0;
+	while (l[i])
+	{
+		if (!ft_is_space(l[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	check_syntax(char *line, int i)
 {
+	if (is_only_spaces(line))
+		return (0);
 	skip_spaces(line, &i);
 	if (line [i] == '|')
 	{

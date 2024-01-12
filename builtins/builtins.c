@@ -6,7 +6,7 @@
 /*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 13:05:26 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/08 17:23:27 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:40:35 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	choose_builtin(t_data *data, t_cmd *cmd, int is_parent)
 	else if (!ft_strncmp(cmd->comand[0], "echo", 5))
 		do_echo(cmd);
 	else if (!ft_strncmp(cmd->comand[0], "export", 7))
-		do_export(data->env, cmd, data);
+		do_export(data->env, cmd);
 	else if (!ft_strncmp(cmd->comand[0], "unset", 6))
 		do_unset(cmd, &data->env);
 	else if (!ft_strncmp(cmd->comand[0], "cd", 3))

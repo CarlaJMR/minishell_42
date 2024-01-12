@@ -3,7 +3,7 @@
 ##########################################################
 
 NAME =  minishell
-CFLAGS = -Wall -Werror -Wextra  -g -fsanitize=address 
+CFLAGS = -Wall -Werror -Wextra  -g #-fsanitize=address 
 CC = cc 
 
 ##########################################################
@@ -11,7 +11,7 @@ CC = cc
 ##########################################################
 
 SRCS =  main/minishell.c main/signals.c\
-		utils/env.c utils/get_next_line.c utils/free_utils.c\
+		utils/env.c utils/get_next_line.c utils/free_utils.c utils/error.c\
 		parser/syntax.c parser/syntax_utils.c \
 		parser/expander.c parser/expander_utils.c \
 		parser/parse.c parser/redirection.c parser/quote_utils.c \

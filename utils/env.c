@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 13:55:55 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/08 17:57:13 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/12 13:08:18 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void	get_env(char **env, t_env **ev)
 {
-	char	*name;
-	char	*content;
 	int		l;
 	int		size;
 	int		len;
@@ -25,10 +23,9 @@ void	get_env(char **env, t_env **ev)
 	while (env[l] != (void *)0)
 	{
 		size = g_size(env[l], '=');
-		name = ft_substr(env[l], 0, size);
 		len = ft_strlen(env[l]);
-		content = ft_substr(env[l], size + 1, len - size);
-		ev_lstadd_back(ev, ev_lstnew(name, content));
+		ev_lstadd_back(ev, ev_lstnew(ft_substr(env[l], 0, size), \
+			ft_substr(env[l], size + 1, len - size)));
 		l++;
 	}
 }

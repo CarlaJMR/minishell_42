@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/05 12:03:22 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:33:00 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ void	ft_hd_child(char *limiter, int fd, t_data sh)
 		line = get_next_line(0);
 		if (!line)
 		{
-			printf("warning: here-doc delimited by ");
-			printf("end-of-file (wanted '%s')\n", limiter);
+			message_heredoc(limiter);
 			break ;
 		}
 		if ((ft_strncmp(line, limiter, ft_strlen(limiter)) == 0) && \

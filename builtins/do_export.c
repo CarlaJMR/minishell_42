@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 11:50:42 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/08 18:39:25 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/12 13:04:31 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,25 @@ void	check_var(char *cmd, t_env *env)
 int	check_repeat(char *cmd, t_env *env)
 {
 	t_env	*tmp;
+	char	*name;
+	int		size;
 
+	if (ft_strchr(cmd, '=') == NULL)
+		size = ft_strlen(cmd);
+	else
+		size = g_size(cmd, '=');
+	name = ft_substr(cmd, 0, size);
 	tmp = env;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->name, cmd, ft_strlen(tmp->name)))
+		if (!ft_strncmp(tmp->name, name, ft_strlen(name)))
+		{
+			free(name);
 			return (0);
+		}
 		tmp = tmp->next;
 	}
+	free(name);
 	return (1);
 }
 
@@ -62,7 +73,7 @@ void	set_variable(t_env *env, char *cmd)
 	else
 	{
 		size = g_size(cmd, '=');
-		name = ft_substr(name, 0, size);
+		name = ft_substr(cmd, 0, size);
 		check_name(name);
 		free(name);
 		len = ft_strlen(cmd);
@@ -71,17 +82,12 @@ void	set_variable(t_env *env, char *cmd)
 	}
 }
 
-void	print_export(t_env *env, t_data *data, t_cmd *cmd)
+void	print_export(t_env *env, t_cmd *cmd)
 {
 	t_env	*tmp;
 
-	(void) *data;
 	tmp = env;
-	if (data->status == 1)
-	{
-		data->status = 0;
-		bubble_sort(env);
-	}
+	bubble_sort(env);
 	while (tmp)
 	{
 		ft_putstr_fd("declare -x: ", cmd->fd_out);

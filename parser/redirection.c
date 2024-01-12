@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/08 16:02:57 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:25:08 by mneves-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ void	infile_error(char **line, int *i)
 	if (access(line[(*i) + 1], F_OK))
 	{
 		set_exit_code(1, 1);
-		ft_putstr_fd(line[(*i) + 1], 1);
-		ft_putendl_fd(": No such file or directory", 1);
+		ft_putstr_fd(line[(*i) + 1], 2);
+		ft_putendl_fd(": No such file or directory", 2);
 	}
 	else if (access(line[(*i) + 1], R_OK))
 	{
 		set_exit_code(126, 1);
-		ft_putstr_fd(line[(*i) + 1], 1);
-		ft_putendl_fd(": Permission denied", 1);
+		ft_putstr_fd(line[(*i) + 1], 2);
+		ft_putendl_fd(": Permission denied", 2);
 	}
 }
 

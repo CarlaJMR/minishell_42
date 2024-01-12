@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:12:25 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/08 17:39:16 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/12 12:52:00 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int			check_syntax(char *line, int i);
 int			check_quotes(char *line, int *i);
 int			check_redir(char *line, int *i);
 int			check_pipe(char *line, int *i);
+int			is_only_spaces(char *l);
 
 //parser - syntax_utils.c
 int			ft_is_space(char c);
@@ -149,6 +150,9 @@ void		free_comand(t_cmd **lst);
 //utils - get_next_line.c
 char		*get_next_line(int fd);
 
+//utils - error.c
+void		message_heredoc(char *limiter);
+
 //builtins - builtins.c
 void		choose_builtin(t_data *data, t_cmd *cmd, int is_parent);
 void		help_builtin(int is_parent, int fd_in, int fd_out, int builtin);
@@ -160,7 +164,7 @@ void		do_unset(t_cmd *cmd, t_env **env);
 void		do_echo(t_cmd *cmd);
 void		print_env(t_env **stack, t_cmd *cmd);
 void		do_pwd(t_env **stack, t_cmd *cmd);
-void		do_export(t_env *env, t_cmd *cmd, t_data *data);
+void		do_export(t_env *env, t_cmd *cmd);
 
 //builtins - do_cd.c
 void		do_cd(t_env *env, t_cmd *cmd);
@@ -178,7 +182,7 @@ int			get_code(char *str);
 void		check_var(char *cmd, t_env *env);
 int			check_repeat(char *cmd, t_env *env);
 void		set_variable(t_env *env, char *cmd);
-void		print_export(t_env *env, t_data *data, t_cmd *cmd);
+void		print_export(t_env *env, t_cmd *cmd);
 void		bubble_sort(t_env *env);
 
 //builtins - utils.c
@@ -189,7 +193,7 @@ void		help_unset(char *name, char *content, t_env *env);
 void		print_cd_error(char *s);
 
 //builtins - utils_2.c
-void		check_name(char *n);
+int			check_name(char *n);
 void		error_export(char *name);
 
 //executor - executor.c
@@ -207,6 +211,6 @@ void		ft_wait(t_data sh);
 //executor - utils_execve.c
 char		*to_path(char *cmd, char **envp);
 char		*path_to_cmd(char *cmd, char **path);
-void		execute_cmd(char **cmd, char **envp);
+void		execute_cmd(char **cmd, char **envp, t_data *sh);
 char		**env_to_matrix(t_env *env);
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:06:56 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/08 17:23:43 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/12 12:30:50 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,23 +77,26 @@ void	do_pwd(t_env **stack, t_cmd *cmd)
 	set_exit_code(0, 1);
 }
 
-void	do_export(t_env *env, t_cmd *cmd, t_data *data)
+void	do_export(t_env *env, t_cmd *cmd)
 {
 	int	i;
 
 	i = 1;
 	if (!cmd->comand[1])
-		print_export(env, data, cmd);
+		print_export(env, cmd);
 	else
 	{
 		while (cmd->comand[i])
 		{
 			if (ft_isalpha(cmd->comand[i][0]) || cmd->comand[i][0] == '_')
 			{
-				if (check_repeat(cmd->comand[i], env))
-					set_variable(env, cmd->comand[i]);
-				else
-					check_var(cmd->comand[i], env);
+				if (!check_name(cmd->comand[i]))
+				{
+					if (check_repeat(cmd->comand[i], env))
+						set_variable(env, cmd->comand[i]);
+					else
+						check_var(cmd->comand[i], env);
+				}
 			}
 			else
 				error_export(cmd->comand[i]);

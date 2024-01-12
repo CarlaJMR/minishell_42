@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:11:40 by cjoao-me          #+#    #+#             */
-/*   Updated: 2024/01/08 16:03:42 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/12 11:23:42 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		printf("\n");
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
@@ -41,12 +41,12 @@ void	child_signal_handler(int signal)
 {
 	if (signal == SIGINT)
 	{
-		printf("\n");
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 	}
 	if (signal == SIGQUIT)
-		printf("Quit (core dumped)\n");
+		ft_putendl_fd("Quit (core dumped)", 1);
 	return ;
 }
 
