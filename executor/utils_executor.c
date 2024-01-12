@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 12:53:38 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/12 12:04:26 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:33:11 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,12 @@ void	do_execve(t_data *data, t_cmd *cmd)
 {
 	char	**our_env;
 
-	our_env = env_to_matrix(data->env);
-	execute_cmd(cmd->comand, our_env, data);
+	if (cmd->redir[0] != -1)
+	{
+		our_env = env_to_matrix(data->env);
+		execute_cmd(cmd->comand, our_env, data);
+	}
+	exit(1);
 }
 
 void	ft_wait(t_data sh)

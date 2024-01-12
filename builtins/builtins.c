@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 13:05:26 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/10 15:40:35 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:41:00 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,5 @@ void	prep_builtin(t_cmd *cmd, int is_parent)
 	if (is_parent)
 		return ;
 	cmd->fd_in = 0;
-	cmd->fd_in = 1;
+	cmd->fd_out = 1;
 }

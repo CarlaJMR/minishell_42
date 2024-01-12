@@ -3,7 +3,7 @@
 ##########################################################
 
 NAME =  minishell
-CFLAGS = -Wall -Werror -Wextra  -g #-fsanitize=address 
+CFLAGS = -Wall -Werror -Wextra  -g -fsanitize=address 
 CC = cc 
 
 ##########################################################

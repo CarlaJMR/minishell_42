@@ -6,7 +6,7 @@
 /*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 13:05:26 by mneves-l          #+#    #+#             */
-/*   Updated: 2023/12/29 11:20:47 by cjoao-me         ###   ########.fr       */
+/*   Updated: 2024/01/12 16:25:53 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	do_exit(t_cmd *cmd)
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(cmd->comand[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		exit(set_exit_code(2, 1));
+		set_exit_code(2, 1);
 	}
 	else if (cmd->comand[2])
 	{

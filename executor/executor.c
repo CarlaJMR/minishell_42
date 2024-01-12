@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mneves-l <mneves-l@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cjoao-me <cjoao-me@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 10:55:55 by mneves-l          #+#    #+#             */
-/*   Updated: 2024/01/09 20:39:14 by mneves-l         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:35:58 by cjoao-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	executor(t_data sh)
 	sh.cmds->fd_out = sh.cmds->redir[1];
 	if (sh.flag_pipe == 0 && is_builtin(sh.cmds) && sh.cmds->redir[0] != -1)
 		choose_builtin(&sh, sh.cmds, 1);
-	else if (sh.cmds->redir[0] != -1)
+	else if (sh.cmds->comand[0]) 
 	{
 		create_pipe(sh, sh.cmds, -1);
 	}
